@@ -1,0 +1,24 @@
+/*changed font to sans-serif improve appearance*/
+div {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.logo {
+  height:50px;
+  margin:5px;
+}
+.nav-bar {
+  display:flex;
+  align-items: center;
+  background-color: #556b8e;
+  color: #d3f0fb;
+  font-size:30px;
+}
+.nav-item {
+  padding-left: 40px;
+}
+
+/*changed color to improve readability*/
+a:visited {
+  color: #d3f0fb;
+}

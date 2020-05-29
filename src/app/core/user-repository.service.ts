@@ -1,0 +1,93 @@
+//split original service into catalog and user services for clarity
+
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/empty';
+import 'rxjs/add/operator/delay';
+
+//don't technically need injectable decorator b/c nothing is getting injected in constructor, but good to have in case need to inject later
+@Injectable()
+export class UserRepositoryService {
+  currentUser:any;
+
+  constructor() {}
+
+  saveUser(user): Observable<any> {
+    user.classes = user.classes || [];
+    //having immutable objects is a best practice
+    //if inputted user gets modified, this would alter the currentUser variable, which we don't want as it could cause bugs/errors with change detection
+    //this.currentUser = user;
+    this.currentUser = Object.assign(
+      {},
+      user,
+      {classes: user.classes || []}
+    );
+
+    return Observable.empty().delay(1000);
+  }
+
+  enroll(classId): Observable<any> {
+    if (!this.currentUser)
+      return Observable.throw('User not signed in');
+
+    if (this.currentUser.classes.includes[classId])
+      return Observable.throw('Already enrolled');
+
+    //having immutable objects is a best practice
+    //this.currentUser = classes.push(classId);
+
+    this.currentUser = Object.assign(
+      {},
+      this.currentUser,
+      {classes: this.currentUser.classes.concat([classId])}
+    );
+
+    return Observable.empty().delay(1000);
+  }
+
+  drop(classId): Observable<any> {
+    if (!this.currentUser)
+      return Observable.throw('User not signed in');
+
+    if (!this.currentUser.classes.includes(classId))
+      return Observable.throw('Not enrolled');
+
+    //having immutable objects is a best practice
+    //this.currentUser.classes = this.currentUser.classes.filter(c => c.classId !== classId);
+    this.currentUser = Object.assign(
+      {},
+      this.currentUser,
+      {classes: this.currentUser.classes.filter(c => c.classId !== classId)}
+    );
+
+    return Observable.empty().delay(1000);
+  }
+
+  signIn(credentials): Observable<any> {
+    //Never, ever check credentials in client-side code.
+    //This code is only here to supply a fake endpoint for signing in.
+
+    //personalized fake credentials for ease of testing
+    if (credentials.email !== 'bc@gmail.com' || credentials.password !== 'aaa')
+      return Observable.throw('Invalid login');
+
+    this.currentUser = {
+      userId: 'e61aebed-dbc5-437a-b514-02b8380d8efc',
+      firstName: 'Brooke',
+      lastName: 'Christiansen',
+      email: 'bc@gmail.com',
+      classes: ['24ab7b14-f935-44c1-b91b-8598123ea54a']
+    };
+
+    return Observable.empty();
+  }
+}
+
+const users = [{
+  userId: 'e61aebed-dbc5-437a-b514-02b8380d8efc',
+  firstName: 'Brooke',
+  lastName: 'Christiansen',
+  email: 'bc@gmail.com',
+  classes: ['24ab7b14-f935-44c1-b91b-8598123ea54a']
+}];
